@@ -4,7 +4,35 @@ import { isSorted } from "./sortingAlgorithms.js";
 const content = window.document.createElement("div");
 
 const testCaseButton = document.createElement("button");
-testCaseButton.innerHTML = "Generate New Test Case"
+testCaseButton.innerHTML = "Generate New Test Case";
+
+const testCaseItems = window.document.createElement("div");
+testCaseItems.className = "chart"
+let testCase = [];
+let testCaseDivs = [];
+
+const createTestCaseDivs = () => {
+    testCaseItems.innerHTML = '';
+    for(let i = 0; i < testCase.length; i++){
+        const bar = document.createElement("div");
+        bar.className = "chartItem";
+        bar.style.height = testCase[i]*2 + "px";
+        testCaseDivs.push(bar);
+        testCaseItems.appendChild(testCaseDivs[i]);
+    }
+}
+
+const updateTestCaseDivs = () => {
+    for(let i = 0; i < testCase.length; i++){
+        testCaseDivs[i].style.height = testCase[i]*2 + "px";
+    }
+}
+
+testCaseButton.addEventListener("click", () => {
+    testCase = Array.from({length: 100}, () => Math.floor(Math.random() * 99 + 1));
+    testCaseDivs = [];
+    createTestCaseDivs();
+});
 
 const shuffle = (arr) => {
     let currentIndex = arr.length,  randomIndex;
@@ -28,21 +56,12 @@ const shuffleButton = document.createElement("button");
 shuffleButton.innerHTML = "Shuffle";
 shuffleButton.addEventListener("click", () => { 
     testCase = shuffle(testCase);
-    const node = document.createTextNode(testCase.join(' '));
-    text.replaceChildren(node);
-});
-
-const text = window.document.createElement("p");
-let testCase = [];
-testCaseButton.addEventListener("click", () => {
-    testCase = Array.from({length: 1000}, () => Math.floor(Math.random() * 1000));
-    const node = document.createTextNode(testCase.join(' '));
-    text.replaceChildren(node);
+    updateTestCaseDivs();
 });
 
 content.appendChild(testCaseButton);
 content.appendChild(shuffleButton);
-content.appendChild(text);
+content.appendChild(testCaseItems);
 
 const algorithms = Object.keys(SortAlgoMetadata);
 for(let algorithm of algorithms){
@@ -71,13 +90,11 @@ for(let algorithm of algorithms){
 
     const isSortedNode = document.createElement("p");
 
-    const sort = () => {
+    const sort = async () => {
         const start = performance.now();
-        testCase = SortAlgoMetadata[algorithm].algo(testCase);
+        testCase = await SortAlgoMetadata[algorithm].algo(testCase, updateTestCaseDivs);
         const end = performance.now();
         const execTime = end - start;
-        const node = document.createTextNode(testCase.join(' '));
-        text.replaceChildren(node);
         
         isSortedNode.replaceChildren(document.createTextNode("Sorted? " + (isSorted(testCase) ? "✅" : "❌") + " in " + execTime + "ms."));
     }

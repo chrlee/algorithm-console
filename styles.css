@@ -1,0 +1,9 @@
+.chart {
+    margin: 1rem;
+}
+
+.chartItem {
+    display: inline-block;
+    width: 2px;
+    border: 1px solid #CCC;
+}
