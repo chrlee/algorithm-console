@@ -13,6 +13,19 @@ export function isSorted(arr){
     return true;
 }
 
+export function selectionSort(arr){
+    for(let i = 0; i < arr.length; i++){
+        let min = i;
+        for(let j = i; j < arr.length; j++){
+            if(arr[j] < arr[min]){
+                min = j;
+            }
+        }
+        swap(arr, i, min);
+    }
+    return arr;
+}
+
 export function bubbleSort(arr){
     for(let i = arr.length-1; i >= 0; i--){
         for(let j = 0; j < i; j++){
