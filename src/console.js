@@ -92,7 +92,7 @@ for(let algorithm of algorithms){
 
     const sort = async () => {
         const start = performance.now();
-        testCase = await SortAlgoMetadata[algorithm].algo(testCase, updateTestCaseDivs);
+        testCase = await SortAlgoMetadata[algorithm].algo(testCase, ()=> requestAnimationFrame(updateTestCaseDivs));
         const end = performance.now();
         const execTime = end - start;
         
